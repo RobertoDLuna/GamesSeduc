@@ -37,7 +37,9 @@ export default function SchoolsPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchSchools();
+    api.get('/schools')
+      .then(response => setSchools(response.data))
+      .catch(error => console.error('Erro ao buscar escolas', error));
   }, []);
 
   const fetchSchools = () => {
@@ -65,8 +67,10 @@ export default function SchoolsPage() {
       setName('');
       setCity('');
       setAddress('');
-    } catch (err: any) {
-      setError(err.response?.data?.error?.[0]?.message || 'Erro ao criar escola.');
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const errorResponse = err as any;
+      setError(errorResponse.response?.data?.error?.[0]?.message || 'Erro ao criar escola.');
     } finally {
       setIsLoading(false);
     }
