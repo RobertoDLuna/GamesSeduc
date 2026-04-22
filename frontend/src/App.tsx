@@ -1,0 +1,47 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginPage from './pages/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+
+const ProtectedRoute = ({ children, roles }: { children: React.ReactNode, roles?: string[] }) => {
+  const { user, token, loading } = useAuth();
+
+  if (loading) return <div className="flex items-center justify-center h-screen">Carregando...</div>;
+  if (!token) return <Navigate to="/login" />;
+  if (roles && user && !roles.includes(user.role)) return <Navigate to="/unauthorized" />;
+
+  return <>{children}</>;
+};
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route 
+        path="/dashboard" 
+        element={
+          <ProtectedRoute>
+            <div className="p-8">
+              <h1 className="text-2xl font-bold">Dashboard em construção</h1>
+              <p>Bem-vindo ao sistema de Xadrez Escolar!</p>
+            </div>
+          </ProtectedRoute>
+        } 
+      />
+      <Route path="/" element={<Navigate to="/dashboard" />} />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </AuthProvider>
+  );
+}
+
+export default App;

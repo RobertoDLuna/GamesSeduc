@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  name          String
+  role          Role      @default(STUDENT)
+  company_id    String?   // Para Lei 03 (Multi-tenant se necessário)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  studentProfile Student?
+  managedSchools School[]   @relation("SchoolTeacher")
+}
+
+model School {
+  id          String   @id @default(uuid())
+  name        String
+  address     String?
+  city        String
+  teacherId   String
+  teacher     User     @relation("SchoolTeacher", fields: [teacherId], references: [id])
+  students    Student[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Student {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id])
+  birthDate   DateTime?
+  grade       String?
+  rating      Int      @default(1200)
+  matchesAsWhite Match[] @relation("WhitePlayer")
+  matchesAsBlack Match[] @relation("BlackPlayer")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tournament {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  status      String   @default("PLANNED") // PLANNED, ONGOING, FINISHED
+  rounds      Round[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Round {
+  id            String     @id @default(uuid())
+  tournamentId  String
+  tournament    Tournament @relation(fields: [tournamentId], references: [id])
+  number        Int
+  matches       Match[]
+  createdAt     DateTime   @default(now())
+}
+
+model Match {
+  id          String   @id @default(uuid())
+  roundId     String
+  round       Round    @relation(fields: [roundId], references: [id])
+  whiteId     String
+  white       Student  @relation("WhitePlayer", fields: [whiteId], references: [id])
+  blackId     String
+  black       Student  @relation("BlackPlayer", fields: [blackId], references: [id])
+  result      String?  // WHITE_WIN, BLACK_WIN, DRAW
+  pgn         String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Config {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String   @db.Text
+  updatedAt   DateTime @updatedAt
+}
