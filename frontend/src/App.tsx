@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './context/auth-context';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { DashboardLayout } from './layouts/DashboardLayout';
 import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
@@ -14,6 +16,7 @@ const ProtectedRoute = ({ children, roles }: { children: React.ReactNode, roles?
   return <>{children}</>;
 };
 
+
 function AppRoutes() {
   return (
     <Routes>
@@ -23,24 +26,30 @@ function AppRoutes() {
         path="/dashboard" 
         element={
           <ProtectedRoute>
-            <div className="p-8">
-              <h1 className="text-2xl font-bold">Dashboard em construção</h1>
-              <p>Bem-vindo ao sistema de Xadrez Escolar!</p>
-            </div>
+            <DashboardLayout />
           </ProtectedRoute>
         } 
-      />
+      >
+        <Route index element={<div className="text-2xl font-bold">Bem-vindo ao Dashboard!</div>} />
+        {/* Placeholder para futuras telas */}
+        <Route path="schools" element={<div>Escolas</div>} />
+        <Route path="students" element={<div>Alunos</div>} />
+        <Route path="tournaments" element={<div>Torneios</div>} />
+      </Route>
       <Route path="/" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
 }
 
+
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <TooltipProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </TooltipProvider>
     </AuthProvider>
   );
 }
