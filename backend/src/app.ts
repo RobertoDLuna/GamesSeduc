@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.routes';
 import schoolRoutes from './routes/school.routes';
 import studentRoutes from './routes/student.routes';
 import tournamentRoutes from './routes/tournament.routes';
+import dashboardRoutes from './routes/dashboard.routes';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/schools', schoolRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/tournaments', tournamentRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

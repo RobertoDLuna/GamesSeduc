@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './context/auth-context';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { DashboardLayout } from './layouts/DashboardLayout';
+import DashboardHomePage from './pages/DashboardHomePage';
 import SchoolsPage from './pages/SchoolsPage';
 import StudentsPage from './pages/StudentsPage';
 import TournamentsPage from './pages/TournamentsPage';
@@ -34,7 +35,7 @@ function AppRoutes() {
           </ProtectedRoute>
         } 
       >
-        <Route index element={<div className="text-2xl font-bold">Bem-vindo ao Dashboard!</div>} />
+        <Route index element={<DashboardHomePage />} />
         {/* Placeholder para futuras telas */}
         <Route path="schools" element={<SchoolsPage />} />
         <Route path="students" element={<StudentsPage />} />
