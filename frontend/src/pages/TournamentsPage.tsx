@@ -1,26 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import api from '../services/api';
+import api from '@/services/api';
+
+interface Tournament {
+  id: string;
+  title: string;
+  description?: string;
+  status: string;
+  startDate: string;
+  _count?: {
+    participants: number;
+    rounds: number;
+  };
+}
 
 export default function TournamentsPage() {
-  const [tournaments, setTournaments] = useState([]);
+  const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchTournaments();
+    api.get('/tournaments')
+      .then(response => setTournaments(response.data))
+      .catch(error => console.error('Erro ao buscar torneios', error));
   }, []);
-
-  const fetchTournaments = async () => {
-    try {
-      const response = await api.get('/tournaments');
-      setTournaments(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar torneios', error);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -33,7 +38,7 @@ export default function TournamentsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tournaments.map((t: any) => (
+        {tournaments.map((t) => (
           <Card key={t.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate(`/dashboard/tournaments/${t.id}`)}>
             <CardHeader>
               <CardTitle>{t.title}</CardTitle>

@@ -1,20 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, Trophy } from 'lucide-react';
-import api from '../services/api';
+import api from '@/services/api';
+
+interface User {
+  name: string;
+}
+
+interface Participant {
+  id: string;
+  rating: number;
+  user: User;
+}
+
+interface Match {
+  id: string;
+  result: string | null;
+  white: { user: User } | null;
+  black: { user: User } | null;
+}
+
+interface Round {
+  id: string;
+  number: number;
+  matches: Match[];
+}
+
+interface TournamentDetails {
+  id: string;
+  title: string;
+  description?: string;
+  status: string;
+  participants: Participant[];
+  rounds: Round[];
+}
 
 export default function TournamentDetailsPage() {
   const { id } = useParams();
-  const [tournament, setTournament] = useState<any>(null);
+  const [tournament, setTournament] = useState<TournamentDetails | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchTournamentDetails();
-  }, [id]);
-
-  const fetchTournamentDetails = async () => {
+  const fetchTournamentDetails = useCallback(async () => {
     try {
       const response = await api.get(`/tournaments/${id}`);
       setTournament(response.data);
@@ -23,7 +51,14 @@ export default function TournamentDetailsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    api.get(`/tournaments/${id}`)
+      .then(response => setTournament(response.data))
+      .catch(error => console.error('Erro ao buscar detalhes do torneio', error))
+      .finally(() => setLoading(false));
+  }, [id]);
 
   const handleGenerateRound = async () => {
     try {
@@ -77,14 +112,14 @@ export default function TournamentDetailsPage() {
               </CardContent>
             </Card>
           ) : (
-            tournament.rounds.map((round: any) => (
+            tournament.rounds.map((round) => (
               <Card key={round.id}>
                 <CardHeader className="bg-slate-50 border-b">
                   <CardTitle className="text-lg">Rodada {round.number}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="divide-y">
-                    {round.matches.map((match: any) => (
+                    {round.matches.map((match) => (
                       <div key={match.id} className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="flex items-center justify-between w-full md:w-auto gap-8">
                           <div className={`font-medium ${match.result === 'WHITE_WIN' ? 'text-green-600' : ''}`}>
@@ -137,7 +172,7 @@ export default function TournamentDetailsPage() {
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
-                {tournament.participants?.map((p: any) => (
+                {tournament.participants?.map((p) => (
                   <li key={p.id} className="flex justify-between items-center text-sm p-2 bg-slate-50 rounded">
                     <span>{p.user?.name}</span>
                     <span className="text-muted-foreground font-mono">{p.rating}</span>
