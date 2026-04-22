@@ -153,7 +153,7 @@ export default function DashboardHomePage() {
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   />
                   <Bar dataKey="students" radius={[4, 4, 0, 0]}>
-                    {stats.charts.schoolStats.map((entry, index) => (
+                    {stats.charts.schoolStats.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Bar>

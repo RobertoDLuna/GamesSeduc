@@ -8,6 +8,7 @@ import SchoolsPage from './pages/SchoolsPage';
 import StudentsPage from './pages/StudentsPage';
 import TournamentsPage from './pages/TournamentsPage';
 import TournamentDetailsPage from './pages/TournamentDetailsPage';
+import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
@@ -42,7 +43,7 @@ function AppRoutes() {
         <Route path="tournaments" element={<TournamentsPage />} />
         <Route path="tournaments/:id" element={<TournamentDetailsPage />} />
       </Route>
-      <Route path="/" element={<Navigate to="/dashboard" />} />
+      <Route path="/" element={<LandingPage />} />
     </Routes>
   );
 }

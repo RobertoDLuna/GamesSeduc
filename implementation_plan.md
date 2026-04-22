@@ -13,78 +13,57 @@ Utilizaremos uma arquitetura de pastas separadas (`frontend` e `backend`) para g
 
 ---
 
-## 📂 2. Modelagem de Dados (Prisma Schema)
+## 📂 2. Modelagem de Dados (Prisma Schema) [DONE]
 
-Com base nas 17 telas, as entidades principais serão:
-- `User`: Administradores, Professores e Alunos (Roles).
+As entidades principais foram implementadas:
+- `User`: Administradores, Professores e Alunos.
 - `School`: Vínculo institucional.
-- `Student`: Perfil detalhado, histórico e pontuação.
-- `Tournament`: Configurações de torneios (Suíço, Eliminatórias).
-- `Round`: Rodadas de emparceiramento.
-- `Match`: Partidas individuais entre alunos.
-- `Media`: Armazenamento de metadados de arquivos (Fotos, Certificados).
-- `Config`: Personalização visual da plataforma.
+- `Student`: Perfil, histórico e rating.
+- `Tournament`: Configurações e status.
+- `Round`: Rodadas do sistema suíço.
+- `Match`: Partidas individuais.
 
 ---
 
 ## 🛠️ 3. Fases de Execução
 
-### Fase 0: Setup de Ambiente & Dockerização (Infra Inicial)
-- Configuração do `docker-compose.yml` para desenvolvimento (PostgreSQL + Adminer).
-- Inicialização dos projetos Frontend e Backend com TypeScript.
-- Configuração do Prisma e migrações iniciais.
-- Setup do Traefik como Reverse Proxy local para simular o ambiente Swarm.
+### Fase 0: Setup de Ambiente [DONE]
+- Estrutura de pastas, TypeScript e Prisma configurados.
+- Scripts de inicialização (`npm run dev`) funcionais.
 
-### Fase 1: Backend Core & Autenticação (Telas 1 e 9)
-- Implementação do JWT Hardening (Lei 05).
-- Rotas de Login e Recuperação de Senha.
-- Middleware de validação com Zod e proteção de rotas por Roles.
-- **Entrega**: API de Auth funcional.
+### Fase 1: Backend Core & Autenticação [DONE]
+- Login, JWT Hardening e proteção de rotas por Roles.
+- Redirecionamento inteligente baseado no status de autenticação.
 
-### Fase 2: Gestão de Cadastros (Telas 4, 8, 14, 16)
-- CRUDs de Escolas, Usuários e Alunos.
-- Implementação da lógica de **Importação via CSV/Excel** (necessário para as telas identificadas).
-- Upload de mídias (Fotos de perfil) usando Multer + Storage local (volume persistente).
-- **Desafio**: Garantir a Lei 03 (Multi-tenant) para que professores vejam apenas seus alunos/escolas.
+### Fase 2: Gestão de Cadastros [DONE]
+- CRUDs de Escolas e Alunos com UI Premium.
+- **Importação CSV**: Implementada para Alunos (lote).
+- **Multi-tenant**: Professores veem apenas seus respectivos dados.
 
-### Fase 3: O "Motor" de Torneios (Telas 3, 10, 15, 17)
-- Lógica de criação de torneios e definição de regras.
-- Algoritmo de emparceiramento (Swiss System ou similar).
-- Gestão de rodadas e lançamento de resultados.
+### Fase 3: Motor de Torneios [DONE]
+- Lógica de criação de torneios com seleção de participantes.
+- Algoritmo de emparceiramento (Swiss System) no backend.
+- Listagem visual de torneios com status.
 
-### Fase 4: Frontend & UI System (Telas 5, 7, 11)
+### Fase 6: Analytics & Dashboards [DONE]
+- Dashboard Home com KPIs (Escolas, Alunos, Torneios).
+- Gráficos de crescimento e distribuição (Recharts).
+- Tabela de atividades recentes.
+
+### Fase 4: Frontend & Landing Page [PENDING]
 - Criação da Landing Page (SEO optimized).
-- Perfil do Aluno com Dashboards de evolução.
-- Sistema de Temas (Customização via Admin) refletindo dinamicamente no CSS.
-- Implementação do `shadcn/ui` para todos os formulários.
+- Sistema de Temas e customização visual.
 
-### Fase 5: Partida & Interatividade (Tela 13)
-- Interface de tabuleiro de xadrez (utilizando `chess.js` e `react-chessboard` para lógica e visual).
-- Registro de jogadas e validação de fim de partida.
+### Fase 5: Partida & Interatividade [PENDING]
+- Interface de tabuleiro de xadrez (`react-chessboard`).
+- Registro de jogadas e validação de resultados.
 
-### Fase 6: Analytics & Reports (Telas 2, 6, 12)
-- Dashboards administrativos com gráficos (Chart.js ou Recharts).
-- Geração de relatórios em PDF/Excel para exportação de resultados.
-
-### Fase 7: Deploy Swarm & Portainer
-- Criação do `stack.yml` para Portainer.
-- Configuração do Traefik para HTTPS e Load Balancing.
-- Configuração de volumes persistentes para o PostgreSQL e Mídias.
+### Fase 7: Deploy Swarm [PENDING]
+- Finalização dos arquivos de stack e configuração de infra final.
 
 ---
 
-## ⚖️ 4. Análise Crítica (Anti-Sycophancy)
+## 🚀 Próximos Passos Imediatos
 
-1.  **Multer vs Storage**: Para um ambiente Swarm (multi-node), o Multer com armazenamento local falhará se os containers rodarem em nós diferentes sem um volume compartilhado (como NFS ou GlusterFS). **Proposta**: Manter Multer, mas preparar a abstração para um S3-Compatible (Minio) caso o volume compartilhado não seja uma opção.
-2.  **Complexidade das 17 Telas**: Tentar desenvolver as 17 simultaneamente causará perda de foco. **Decisão**: Seguiremos a ordem das fases acima. Só avançaremos para a "Fase de Torneios" quando o "Cadastro de Alunos/Escolas" estiver 100% sólido.
-3.  **Segurança**: O uso de Zod no backend é excelente, mas implementaremos também no frontend para feedback instantâneo (Shared Schemas).
-
----
-
-## 🚀 5. Próximos Passos
-
-1.  Aprovação deste plano.
-2.  Criação da estrutura de pastas e `docker-compose` inicial.
-3.  Definição do `schema.prisma`.
-
-**Aguardando sua validação para iniciar a Fase 0.**
+1. **Landing Page**: Criar a cara pública do projeto.
+2. **Tabuleiro**: Implementar a experiência real de jogo para os alunos.
