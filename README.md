@@ -36,11 +36,6 @@ Plataforma moderna para gestão de torneios de xadrez escolar, desenvolvida com 
     npm run dev
     ```
 
-## 🔐 Acesso Inicial
-- **Administrador**: admin@seduc.com / admin123
-
----
-
 ## 🏗️ Estrutura do Projeto
 
 - `/frontend`: Aplicação React (Vite).
