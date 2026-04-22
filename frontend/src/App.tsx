@@ -3,6 +3,8 @@ import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './context/auth-context';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { DashboardLayout } from './layouts/DashboardLayout';
+import TournamentsPage from './pages/TournamentsPage';
+import TournamentDetailsPage from './pages/TournamentDetailsPage';
 import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
@@ -34,7 +36,8 @@ function AppRoutes() {
         {/* Placeholder para futuras telas */}
         <Route path="schools" element={<div>Escolas</div>} />
         <Route path="students" element={<div>Alunos</div>} />
-        <Route path="tournaments" element={<div>Torneios</div>} />
+        <Route path="tournaments" element={<TournamentsPage />} />
+        <Route path="tournaments/:id" element={<TournamentDetailsPage />} />
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" />} />
     </Routes>

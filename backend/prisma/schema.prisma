@@ -50,6 +50,7 @@ model Student {
   rating      Int      @default(1200)
   matchesAsWhite Match[] @relation("WhitePlayer")
   matchesAsBlack Match[] @relation("BlackPlayer")
+  tournaments Tournament[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -62,6 +63,7 @@ model Tournament {
   endDate     DateTime?
   status      String   @default("PLANNED") // PLANNED, ONGOING, FINISHED
   rounds      Round[]
+  participants Student[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
